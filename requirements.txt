@@ -1,1 +1,3 @@
-feedparser==6.0.11
+pandas
+pydrive2
+oauth2client
