@@ -18,6 +18,7 @@ df.to_csv(output_file, index=False)
 print("CSV created")
 
 # ---------- GOOGLE DRIVE AUTH ----------
+print("Secret length:", len(os.environ["GDRIVE_CREDENTIALS"]))
 creds_json = json.loads(os.environ["GDRIVE_CREDENTIALS"])
 
 with open("credentials.json", "w") as f:
