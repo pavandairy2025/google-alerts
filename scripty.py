@@ -1,8 +1,23 @@
+import os
+import json
+from datetime import datetime
 from pydrive2.auth import ServiceAccountCredentials
 from pydrive2.drive import GoogleDrive
-import json
+import pandas as pd
 
-# --- GOOGLE DRIVE AUTH ---
+# ---------- CREATE OUTPUT FILE ----------
+now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+df = pd.DataFrame({
+    "Run_Time": [now],
+    "Status": ["Automation ran successfully"]
+})
+
+output_file = "output.csv"
+df.to_csv(output_file, index=False)
+print("CSV created")
+
+# ---------- GOOGLE DRIVE AUTH ----------
 creds_json = json.loads(os.environ["GDRIVE_CREDENTIALS"])
 
 with open("credentials.json", "w") as f:
@@ -15,12 +30,13 @@ creds = ServiceAccountCredentials.from_json_keyfile_name(
 
 drive = GoogleDrive(creds)
 
-# --- UPLOAD FILE ---
-drive_file = drive.CreateFile({
-    'title': os.path.basename(file_name),
+# ---------- UPLOAD TO DRIVE ----------
+file = drive.CreateFile({
+    'title': f'output_{datetime.now().strftime("%Y%m%d_%H%M")}.csv',
     'parents': [{'id': os.environ["GDRIVE_FOLDER_ID"]}]
 })
-drive_file.SetContentFile(file_name)
-drive_file.Upload()
 
-print("✅ File uploaded to Google Drive")
+file.SetContentFile(output_file)
+file.Upload()
+
+print("Uploaded to Google Drive")
