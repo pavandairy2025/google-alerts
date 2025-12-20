@@ -1,3 +1,5 @@
+feedparser
 pandas
+python-dateutil
 pydrive2
 oauth2client
